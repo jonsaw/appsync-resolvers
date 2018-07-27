@@ -43,10 +43,10 @@ var _ = Describe("Middleware", func() {
 			}
 			return HandlerFunc(m)
 		})
-		r.Use(func(handler Handler) Handler {
+		r.Use(func(h Handler) Handler {
 			m := func(in invocation) (interface{}, error) {
 				ch <- "before 2"
-				out, err := handler.Serve(in)
+				out, err := h.Serve(in)
 				ch <- "after 2"
 				return out, err
 			}
