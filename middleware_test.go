@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"encoding/json"
-	"fmt"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -26,13 +25,13 @@ func newGraphQLError(t string, m string, d interface{}) *graphQLError {
 	}
 }
 
-func sequence(ch chan string, seq ...string) error {
-	for i, str := range seq {
+func sequence(ch chan string, seq ...string) bool {
+	for _, str := range seq {
 		if msg := <-ch; msg != str {
-			return fmt.Errorf("[%d] expected %s, got %s", i, str, msg)
+			return false
 		}
 	}
-	return nil
+	return true
 }
 
 var _ = Describe("Middleware", func() {
@@ -91,7 +90,7 @@ var _ = Describe("Middleware", func() {
 					"handler",
 					"after 2",
 					"after 1",
-				)).ToNot(HaveOccurred())
+				)).To(BeTrue())
 		})
 	})
 
@@ -146,7 +145,7 @@ var _ = Describe("Middleware", func() {
 					"before 1",
 					"handler",
 					"after 1",
-				)).ToNot(HaveOccurred())
+				)).To(BeTrue())
 		})
 	})
 })
