@@ -1,31 +1,32 @@
 package resolvers
 
 import (
-	"fmt"
 	"reflect"
 )
 
 // Repository stores all resolvers
-type Repository map[string]resolver
+type Repository struct {
+	handler    Handler
+	middleware []func(Handler) Handler
+	resolvers  map[string]resolver
+}
 
 // Add stores a new resolver
-func (r Repository) Add(resolve string, handler interface{}) error {
+func (r *Repository) Add(resolve string, handler interface{}) error {
+	if r.resolvers == nil {
+		r.resolvers = map[string]resolver{}
+	}
+
 	err := validators.run(reflect.TypeOf(handler))
 
 	if err == nil {
-		r[resolve] = resolver{handler}
+		r.resolvers[resolve] = resolver{handler}
 	}
 
 	return err
 }
 
 // Handle responds to the AppSync request
-func (r Repository) Handle(in invocation) (interface{}, error) {
-	handler, found := r[in.Resolve]
-
-	if found {
-		return handler.call(in.payload())
-	}
-
-	return nil, fmt.Errorf("No resolver found: %s", in.Resolve)
+func (r *Repository) Handle(in invocation) (interface{}, error) {
+	return r.handler.Serve(in)
 }
