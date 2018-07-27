@@ -7,16 +7,17 @@ type context struct {
 	Source    json.RawMessage `json:"source"`
 }
 
-type invocation struct {
+// Invocation data received from AppSync
+type Invocation struct {
 	Resolve string  `json:"resolve"`
 	Context context `json:"context"`
 }
 
-func (in invocation) isRoot() bool {
+func (in Invocation) isRoot() bool {
 	return in.Context.Source == nil || string(in.Context.Source) == "null"
 }
 
-func (in invocation) payload() json.RawMessage {
+func (in Invocation) payload() json.RawMessage {
 	if in.isRoot() {
 		return in.Context.Arguments
 	}

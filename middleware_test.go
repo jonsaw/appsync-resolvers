@@ -50,7 +50,7 @@ var _ = Describe("Middleware", func() {
 			return response{"bar"}, nil
 		})
 		r.Use(func(h Handler) Handler {
-			m := func(in invocation) (interface{}, error) {
+			m := func(in Invocation) (interface{}, error) {
 				ch <- "before 1"
 				out, err := h.Serve(in)
 				ch <- "after 1"
@@ -59,7 +59,7 @@ var _ = Describe("Middleware", func() {
 			return HandlerFunc(m)
 		})
 		r.Use(func(h Handler) Handler {
-			m := func(in invocation) (interface{}, error) {
+			m := func(in Invocation) (interface{}, error) {
 				ch <- "before 2"
 				out, err := h.Serve(in)
 				ch <- "after 2"
@@ -67,7 +67,7 @@ var _ = Describe("Middleware", func() {
 			}
 			return HandlerFunc(m)
 		})
-		res, err := r.Handle(invocation{
+		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver",
 			Context: context{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
@@ -102,7 +102,7 @@ var _ = Describe("Middleware", func() {
 			return nil, newGraphQLError("BAD_REQUEST", "Invalid type", response{"bar"})
 		})
 		r.Use(func(h Handler) Handler {
-			m := func(in invocation) (interface{}, error) {
+			m := func(in Invocation) (interface{}, error) {
 				ch <- "before 1"
 				out, err := h.Serve(in)
 				ch <- "after 1"
@@ -111,7 +111,7 @@ var _ = Describe("Middleware", func() {
 			return HandlerFunc(m)
 		})
 		r.Use(func(h Handler) Handler {
-			m := func(in invocation) (interface{}, error) {
+			m := func(in Invocation) (interface{}, error) {
 				out, err := h.Serve(in)
 				if err != nil {
 					if errData, ok := err.(*graphQLError); ok {
@@ -122,7 +122,7 @@ var _ = Describe("Middleware", func() {
 			}
 			return HandlerFunc(m)
 		})
-		res, err := r.Handle(invocation{
+		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver",
 			Context: context{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
