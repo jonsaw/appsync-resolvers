@@ -22,7 +22,7 @@ var _ = Describe("Repository", func() {
 	Context("Matching invocation", func() {
 		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
 			},
 		})
@@ -39,7 +39,7 @@ var _ = Describe("Repository", func() {
 	Context("Matching invocation with error", func() {
 		_, err := r.Handle(Invocation{
 			Resolve: "example.resolver.with.error",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
 			},
 		})
@@ -52,7 +52,7 @@ var _ = Describe("Repository", func() {
 	Context("Matching invocation with invalid payload", func() {
 		_, err := r.Handle(Invocation{
 			Resolve: "example.resolver.with.error",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar:foo"}`),
 			},
 		})
@@ -65,7 +65,7 @@ var _ = Describe("Repository", func() {
 	Context("Not matching invocation", func() {
 		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver.not.found",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
 			},
 		})

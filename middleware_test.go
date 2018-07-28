@@ -69,7 +69,7 @@ var _ = Describe("Middleware", func() {
 		})
 		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
 			},
 		})
@@ -124,7 +124,7 @@ var _ = Describe("Middleware", func() {
 		})
 		res, err := r.Handle(Invocation{
 			Resolve: "example.resolver",
-			Context: context{
+			Context: ContextData{
 				Arguments: json.RawMessage(`{"bar":"foo"}`),
 			},
 		})
