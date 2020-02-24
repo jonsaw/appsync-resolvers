@@ -4,8 +4,9 @@ import "encoding/json"
 
 // ContextData data received from AppSync
 type ContextData struct {
-	Arguments json.RawMessage `json:"arguments"`
-	Source    json.RawMessage `json:"source"`
+	Arguments json.RawMessage  `json:"arguments"`
+	Source    json.RawMessage  `json:"source"`
+	Identity  *json.RawMessage `json:"identity"`
 }
 
 // Invocation data received from AppSync
@@ -24,4 +25,8 @@ func (in Invocation) payload() json.RawMessage {
 	}
 
 	return in.Context.Source
+}
+
+func (in Invocation) identity() *json.RawMessage {
+	return in.Context.Identity
 }
